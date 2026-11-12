@@ -252,7 +252,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(options: [
             .applicationName: "Clammr",
-            .applicationIcon: NSImage(systemSymbolName: "laptopcomputer.slash", accessibilityDescription: nil) as Any,
             .credits: credits,
         ])
     }

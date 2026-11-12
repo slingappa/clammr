@@ -3,7 +3,7 @@
 Name: "Clammr" = clamshell mode without physically closing the lid.
 
 ## Goal
-Free menu bar replacement for BetterDisplay's "disconnect built-in display" feature.
+Lightweight, single-purpose menu bar alternative to the "disconnect display" feature found in tools like BetterDisplay.
 Turn the MacBook's internal panel fully off (detached from WindowServer, backlight off,
 windows migrate to external) while lid stays open and an external HDMI/USB-C monitor is connected.
 
@@ -31,7 +31,7 @@ Menu bar icon (SF Symbols): `laptopcomputer` (panel on) / `laptopcomputer.slash`
 Left-click opens menu, rebuilt on every open (`NSMenuDelegate.menuNeedsUpdate`):
 - Header "Clammr <version>" (bold, disabled; version from `CFBundleShortVersionString`)
 - (bottom, above Quit) "About Clammr" → standard About panel (`orderFrontStandardAboutPanel`, app activated first
-  since `LSUIElement`), icon `laptopcomputer.slash`, credits = tagline + clickable `repoURL`, copyright from
+  since `LSUIElement`), default app icon (no SF Symbol — Apple terms forbid SF Symbols as app icons/logos), credits = tagline + clickable `repoURL`, copyright from
   `NSHumanReadableCopyright` in Info.plist. "View on GitHub" → `NSWorkspace.open(repoURL)`.
   `repoURL` = https://github.com/slingappa/clammr (global constant in App.swift).
 - Switch row (`SwitchRowView`, custom `NSMenuItem.view`, BetterDisplay-style): laptop icon,
