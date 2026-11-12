@@ -7,7 +7,13 @@ APP=Clammr.app
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS"
 
-swiftc -O -swift-version 5 App.swift -o "$APP/Contents/MacOS/Clammr"
+# Universal binary (Apple Silicon + Intel), macOS 13+
+BIN=$(mktemp -d)
+for arch in arm64 x86_64; do
+    swiftc -O -swift-version 5 -target "$arch-apple-macos13.0" App.swift -o "$BIN/Clammr-$arch"
+done
+lipo -create "$BIN/Clammr-arm64" "$BIN/Clammr-x86_64" -output "$APP/Contents/MacOS/Clammr"
+rm -rf "$BIN"
 
 # App icon: render original artwork from make_icon.swift -> .iconset -> .icns
 mkdir -p "$APP/Contents/Resources"
@@ -44,6 +50,12 @@ EOF
 
 codesign --force --sign - "$APP"
 echo "built ./$APP"
+
+if [ "$1" = "zip" ]; then
+    VER=$(defaults read "$PWD/$APP/Contents/Info" CFBundleShortVersionString)
+    ditto -c -k --keepParent "$APP" "Clammr-$VER.zip"
+    echo "zipped ./Clammr-$VER.zip"
+fi
 
 if [ "$1" = "install" ]; then
     mkdir -p "$HOME/Applications"

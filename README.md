@@ -54,20 +54,30 @@ Clammr **detaches** the panel instead: macOS treats it as unplugged, windows mov
 
 ## Requirements
 
-- macOS 13 Ventura or later
-- Xcode Command Line Tools (`xcode-select --install`)
+- macOS 13 Ventura or later, Apple Silicon or Intel
 - Tested on Apple Silicon, macOS 26
 
-## Build & install
+## Download
+
+1. Grab `Clammr-<version>.zip` from the [latest release](https://github.com/slingappa/clammr/releases/latest).
+2. Unzip and move **Clammr.app** to `~/Applications` (or `/Applications`).
+3. Open it. Clammr isn't notarized by Apple, so macOS blocks the first launch:
+   **System Settings → Privacy & Security → "Clammr was blocked…" → Open Anyway**.
+   Or in Terminal: `xattr -dr com.apple.quarantine ~/Applications/Clammr.app`
+
+## Build from source
+
+Needs Xcode Command Line Tools (`xcode-select --install`).
 
 ```sh
 git clone https://github.com/slingappa/clammr.git
 cd clammr
 ./build.sh            # builds ./Clammr.app
 ./build.sh install    # copies to ~/Applications and launches
+./build.sh zip        # builds Clammr-<version>.zip for a release
 ```
 
-The app is ad-hoc signed. On first launch macOS may block it — right-click **Clammr.app → Open**.
+Built locally, the app is ad-hoc signed and not quarantined, so it opens without a prompt.
 
 ## Usage
 
