@@ -51,6 +51,77 @@ enum Displays {
     }
 }
 
+// MARK: - Clam icon
+
+/// Monochrome template clam icon for the menu bar / switch row (original artwork, no SF Symbols).
+enum ClamIcon {
+    static func image(off: Bool, size: CGFloat = 18) -> NSImage {
+        let img = NSImage(size: NSSize(width: size, height: size), flipped: false) { rect in
+            guard let ctx = NSGraphicsContext.current?.cgContext else { return false }
+            ctx.scaleBy(x: rect.width / 18, y: rect.height / 18)
+            draw(ctx, off: off)
+            return true
+        }
+        img.isTemplate = true
+        return img
+    }
+
+    /// Draws in an 18x18 design grid.
+    static func draw(_ ctx: CGContext, off: Bool) {
+        ctx.setFillColor(NSColor.black.cgColor)
+        ctx.setStrokeColor(NSColor.black.cgColor)
+
+        // laptop base
+        ctx.addPath(CGPath(roundedRect: CGRect(x: 1, y: 2.4, width: 16, height: 1.8),
+                           cornerWidth: 0.9, cornerHeight: 0.9, transform: nil))
+        ctx.fillPath()
+
+        // scallop-shell lid
+        let hinge = CGPoint(x: 9, y: 5.0)
+        let R: CGFloat = 9.6, a0: CGFloat = .pi * 0.15, a1: CGFloat = .pi * 0.85, lobes: CGFloat = 5
+        func edge(_ t: CGFloat, _ k: CGFloat = 1) -> CGPoint {
+            let th = a0 + (a1 - a0) * t
+            let r = (R - 1.1 * (1 - abs(sin(lobes * .pi * t)))) * k
+            return CGPoint(x: hinge.x + r * cos(th), y: hinge.y + r * sin(th))
+        }
+        let shell = CGMutablePath()
+        shell.move(to: hinge)
+        for i in 0...120 { shell.addLine(to: edge(CGFloat(i) / 120)) }
+        shell.closeSubpath()
+        // hinge "ears", classic scallop detail
+        shell.move(to: CGPoint(x: hinge.x - 2.2, y: hinge.y - 0.3))
+        shell.addLine(to: CGPoint(x: hinge.x + 2.2, y: hinge.y - 0.3))
+        shell.addLine(to: CGPoint(x: hinge.x + 1.3, y: hinge.y + 1.8))
+        shell.addLine(to: CGPoint(x: hinge.x - 1.3, y: hinge.y + 1.8))
+        shell.closeSubpath()
+        ctx.addPath(shell)
+        ctx.fillPath()
+
+        // ribs cut out between lobes
+        ctx.setBlendMode(.clear)
+        ctx.setLineCap(.round)
+        ctx.setLineWidth(0.85)
+        for k in 1..<Int(lobes) {
+            let t = CGFloat(k) / lobes
+            let th = a0 + (a1 - a0) * t
+            ctx.move(to: CGPoint(x: hinge.x + 3.0 * cos(th), y: hinge.y + 3.0 * sin(th)))
+            ctx.addLine(to: edge(t, 0.86))
+        }
+        ctx.strokePath()
+
+        // "off" slash: clear gap, then solid stroke
+        if off {
+            let a = CGPoint(x: 3, y: 16), b = CGPoint(x: 15, y: 1.5)
+            ctx.setLineWidth(2.6)
+            ctx.move(to: a); ctx.addLine(to: b); ctx.strokePath()
+            ctx.setBlendMode(.normal)
+            ctx.setLineWidth(1.2)
+            ctx.move(to: a); ctx.addLine(to: b); ctx.strokePath()
+        }
+        ctx.setBlendMode(.normal)
+    }
+}
+
 // MARK: - Switch row (menu item view, BetterDisplay-style)
 
 final class SwitchRowView: NSView {
@@ -62,8 +133,7 @@ final class SwitchRowView: NSView {
     init(target: AnyObject, action: Selector) {
         super.init(frame: NSRect(x: 0, y: 0, width: 280, height: 44))
 
-        icon.image = NSImage(systemSymbolName: "laptopcomputer", accessibilityDescription: nil)
-        icon.symbolConfiguration = .init(pointSize: 18, weight: .regular)
+        icon.image = ClamIcon.image(off: false, size: 22)
         icon.contentTintColor = .secondaryLabelColor
 
         title.font = .menuFont(ofSize: 0)
@@ -101,8 +171,7 @@ final class SwitchRowView: NSView {
         toggle.state = on ? .on : .off
         // Can't switch off without an external display; can always switch back on.
         toggle.isEnabled = !(on && externals == 0)
-        icon.image = NSImage(systemSymbolName: on ? "laptopcomputer" : "laptopcomputer.slash",
-                             accessibilityDescription: nil)
+        icon.image = ClamIcon.image(off: !on, size: 22)
         let ext = "\(externals) external display\(externals == 1 ? "" : "s")"
         subtitle.stringValue = on && externals == 0 ? "Connect an external display first" : "\(on ? "On" : "Off") · \(ext)"
     }
@@ -172,10 +241,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func refreshIcon() {
         let on = Displays.builtinOn
         switchRow?.update(on: on, externals: Displays.externals().count)
-        let img = NSImage(systemSymbolName: on ? "laptopcomputer" : "laptopcomputer.slash",
-                          accessibilityDescription: on ? "Built-in display on" : "Built-in display off")
-        img?.isTemplate = true
-        statusItem.button?.image = img
+        statusItem.button?.image = ClamIcon.image(off: !on)
+        statusItem.button?.setAccessibilityLabel(on ? "Clammr: built-in display on" : "Clammr: built-in display off")
     }
 
     // MARK: menu

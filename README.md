@@ -1,14 +1,28 @@
-# Clammr
+<p align="center">
+  <img src="docs/icon.png" width="128" alt="Clammr icon">
+</p>
 
-**Clamshell mode without closing the lid.**
+<h1 align="center">Clammr</h1>
+
+<p align="center"><b>Clamshell mode without closing the lid.</b></p>
 
 A tiny macOS menu bar app that turns your MacBook's built-in display **fully off** while an external monitor is connected — lid stays open, keyboard and trackpad stay usable.
+
+### Menu bar icon
+
+A monochrome clam that adapts to light and dark menu bars. A slash means the built-in display is off.
+
+<p align="center">
+  <img src="docs/menubar.png" width="570" alt="Menu bar icon: on (left) and off (right), light and dark menu bars">
+</p>
+
+### Menu
 
 ```
 ┌──────────────────────────────────────┐
 │ Clammr 1.0                           │
 ├──────────────────────────────────────┤
-│ 💻  Built-in Display          [●━━]  │
+│ 🐚  Built-in Display          [●━━]  │
 │     On · 1 external display          │
 ├──────────────────────────────────────┤
 │ ✓ Keep Off After Wake/Reconnect      │
@@ -35,7 +49,8 @@ Clammr **detaches** the panel instead: macOS treats it as unplugged, windows mov
 - **Keep Off After Wake/Reconnect** — re-detaches the panel when macOS brings it back after sleep
 - Quitting restores the display
 - Launch at Login
-- Single Swift file, no dependencies, ~250 lines — icon drawn in code too (`make_icon.swift`)
+- Single Swift file, no dependencies, ~350 lines
+- Original artwork drawn in code: app icon (`make_icon.swift`) and menu bar icon (`ClamIcon` in `App.swift`) — no Apple SF Symbols
 
 ## Requirements
 
@@ -57,7 +72,7 @@ The app is ad-hoc signed. On first launch macOS may block it — right-click **C
 ## Usage
 
 1. Connect an external monitor.
-2. Click the laptop icon in the menu bar.
+2. Click the clam icon in the menu bar.
 3. Flip the **Built-in Display** switch off.
 
 The icon shows a slash while the built-in display is off.
