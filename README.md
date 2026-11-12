@@ -35,7 +35,7 @@ Clammr **detaches** the panel instead: macOS treats it as unplugged, windows mov
 - **Keep Off After Wake/Reconnect** — re-detaches the panel when macOS brings it back after sleep
 - Quitting restores the display
 - Launch at Login
-- Single Swift file, no dependencies, ~250 lines
+- Single Swift file, no dependencies, ~250 lines — icon drawn in code too (`make_icon.swift`)
 
 ## Requirements
 

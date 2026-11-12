@@ -66,6 +66,10 @@ Panel turned off by another tool (e.g. BetterDisplay) is not touched on quit.
 - `LICENSE` — MIT.
 - `.gitignore` — ignores build output `Clammr.app/`.
 - `App.swift` — whole app.
+- `make_icon.swift` — draws the original app icon (CoreGraphics, no external assets): night-blue rounded
+  square, scallop-shell lid (7 lobes, radial ribs, growth rings, peach gradient) hinged on a light-grey laptop
+  base = "clamshell". `build.sh` renders 1024px PNG → `sips` sizes 16–1024 → `iconutil` → `Resources/AppIcon.icns`,
+  referenced by `CFBundleIconFile`. Also used automatically by the About panel.
 - `build.sh` — compiles with `swiftc -O -swift-version 5`, assembles `Clammr.app`
   (Info.plist written inline), ad-hoc codesigns. `./build.sh install` copies to `~/Applications` and launches.
 
