@@ -6,6 +6,9 @@ import ServiceManagement
 @_silgen_name("CGSConfigureDisplayEnabled")
 func CGSConfigureDisplayEnabled(_ config: CGDisplayConfigRef, _ display: CGDirectDisplayID, _ enabled: Bool) -> CGError
 
+let repoURL = URL(string: "https://github.com/slingappa/clammr")!
+let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "dev"
+
 // MARK: - Display helpers
 
 enum Displays {
@@ -182,6 +185,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let on = Displays.builtinOn
         let ext = Displays.externals().count
 
+        let header = NSMenuItem(title: "Clammr \(appVersion)", action: nil, keyEquivalent: "")
+        header.attributedTitle = NSAttributedString(string: "Clammr \(appVersion)",
+            attributes: [.font: NSFont.boldSystemFont(ofSize: NSFont.systemFontSize)])
+        header.isEnabled = false
+        menu.addItem(header)
+        menu.addItem(.separator())
+
         let row = NSMenuItem()
         let view = SwitchRowView(target: self, action: #selector(switchChanged(_:)))
         view.update(on: on, externals: ext)
@@ -201,6 +211,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(login)
 
         menu.addItem(.separator())
+        let about = NSMenuItem(title: "About Clammr", action: #selector(showAbout), keyEquivalent: "")
+        about.target = self
+        menu.addItem(about)
+        let gh = NSMenuItem(title: "View on GitHub", action: #selector(openGitHub), keyEquivalent: "")
+        gh.target = self
+        menu.addItem(gh)
+        menu.addItem(.separator())
         let quit = NSMenuItem(title: "Quit (restores display)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         menu.addItem(quit)
     }
@@ -218,6 +235,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @objc private func toggleKeepOff() { keepOff.toggle() }
+
+    @objc private func openGitHub() { NSWorkspace.shared.open(repoURL) }
+
+    @objc private func showAbout() {
+        let credits = NSMutableAttributedString(
+            string: "Clamshell mode without closing the lid.\n\n",
+            attributes: [.font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+                         .foregroundColor: NSColor.labelColor])
+        credits.append(NSAttributedString(string: repoURL.absoluteString.replacingOccurrences(of: "https://", with: ""),
+            attributes: [.font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize), .link: repoURL]))
+        let style = NSMutableParagraphStyle()
+        style.alignment = .center
+        credits.addAttribute(.paragraphStyle, value: style, range: NSRange(location: 0, length: credits.length))
+
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.orderFrontStandardAboutPanel(options: [
+            .applicationName: "Clammr",
+            .applicationIcon: NSImage(systemSymbolName: "laptopcomputer.slash", accessibilityDescription: nil) as Any,
+            .credits: credits,
+        ])
+    }
 
     @objc private func toggleLogin() {
         do {

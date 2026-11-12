@@ -6,11 +6,16 @@ A tiny macOS menu bar app that turns your MacBook's built-in display **fully off
 
 ```
 ┌──────────────────────────────────────┐
+│ Clammr 1.0                           │
+├──────────────────────────────────────┤
 │ 💻  Built-in Display          [●━━]  │
 │     On · 1 external display          │
 ├──────────────────────────────────────┤
 │ ✓ Keep Off After Wake/Reconnect      │
 │   Launch at Login                    │
+├──────────────────────────────────────┤
+│   About Clammr                       │
+│   View on GitHub                     │
 ├──────────────────────────────────────┤
 │   Quit (restores display)        ⌘Q  │
 └──────────────────────────────────────┘

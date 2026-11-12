@@ -29,6 +29,11 @@ Single-file AppKit app (`App.swift`), bundle `Clammr.app`, `LSUIElement=true` (n
 
 Menu bar icon (SF Symbols): `laptopcomputer` (panel on) / `laptopcomputer.slash` (panel off).
 Left-click opens menu, rebuilt on every open (`NSMenuDelegate.menuNeedsUpdate`):
+- Header "Clammr <version>" (bold, disabled; version from `CFBundleShortVersionString`)
+- (bottom, above Quit) "About Clammr" → standard About panel (`orderFrontStandardAboutPanel`, app activated first
+  since `LSUIElement`), icon `laptopcomputer.slash`, credits = tagline + clickable `repoURL`, copyright from
+  `NSHumanReadableCopyright` in Info.plist. "View on GitHub" → `NSWorkspace.open(repoURL)`.
+  `repoURL` = https://github.com/slingappa/clammr (global constant in App.swift).
 - Switch row (`SwitchRowView`, custom `NSMenuItem.view`, BetterDisplay-style): laptop icon,
   title "Built-in Display", subtitle "On/Off · N external displays", `NSSwitch` on the right.
   Switch disabled when panel on and no external display (subtitle: "Connect an external display first").
